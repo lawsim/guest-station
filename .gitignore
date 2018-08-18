@@ -2,6 +2,7 @@ public/application/config/config.php
 public/application/config/my_local_constants.php
 public/application/config/database.php
 
+label-print/*.png
 
 # Compiled source #
 ###################

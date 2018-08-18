@@ -23,7 +23,7 @@ class Welcome_auth extends CI_Controller
 	
 	function add_user()
 	{
-		// $this->tank_auth->create_user("username","email@domain.org","password",false);
+		// $this->tank_auth->create_user("frontstation","email@domain.org","1234",false);
 		// $this->tank_auth->set_password(2,"password");
 	}
 }

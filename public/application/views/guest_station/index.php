@@ -5,13 +5,23 @@
 	echo form_hidden('location',$station_info->location);
 	// print_r($station_info);
 ?>
-<div><a href="<?php echo site_url('guest_station/checkout'); ?>" class="ui-btn" data-ajax="false">Click here to check out</a></div>
-<div id="results"><?php echo $message; ?></div>
-<h2>Guest checkin</h2>
-<p>Your name, reason for visit and picture will be captured</p>
 
-<div id="my_camera"></div>
-<br />
+
+<?php
+
+	if(SHOW_CHECKOUT)
+	{
+		echo '<div><a href="' . site_url('guest_station/checkout') . '" class="ui-btn" data-ajax="false">Click here to check out</a></div>';
+	}
+
+	echo '<div id="results"><?php echo $message; ?></div>';
+	if(CAPTURE_PHOTO)
+	{
+		echo '<div id="my_camera"></div><br />';
+	}
+
+?>
+
 <label for="text-basic">Full Name:</label>
 <input type="text" name="name" id="name" />
 <br />
@@ -22,6 +32,7 @@
 </form>
 
 
+<?php if(CAPTURE_PHOTO): ?>
 <!-- First, include the Webcam.js JavaScript Library -->
 <script src="<?php echo base_url();?>assets/webcam.min.js"></script>
 
@@ -77,4 +88,39 @@
 	}
 </script>
 
+<?php else: ?>
+<!-- Code to handle taking the snapshot and displaying it locally -->
+<script language="JavaScript">
+     // bind event handler
+     $('#submit').click($.throttle(4000,submit_checkin));
 
+	function submit_checkin() {
+		var fname = $("#name").val();
+        
+        if( !$("#name").val() || !$("#reason").val())
+        {
+            document.getElementById('results').innerHTML = "You cannot leave name or reason blank";
+            return;
+        }
+		
+		$.post( "<?php echo base_url(); ?>" + "index.php/guest_station/checkin_guest", { 
+			fullname: fname,
+			stationid: $("input[name=stationid]").val(),
+			site: $("input[name=site]").val(),
+			location: $("input[name=location]").val(),
+			reason: $("input[name=reason]").val(),
+			imguri: ''
+		})
+		.done(function( data ) {
+			console.log(data);
+			document.getElementById('results').innerHTML = data;
+			$('#name').val('');
+			$('#reason').val('');
+			/*document.getElementById('results').innerHTML = 
+				'<h2>Here is your large image:</h2>' + 
+				'<img src="'+data_uri+'"/>';*/
+		});
+	}
+</script>
+
+<?php endif; ?>

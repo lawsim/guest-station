@@ -18,8 +18,11 @@ class guest_station extends CI_Controller {
 		
 
 		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip == "::1" ? $ip = "127.0.0.1" : false;
+		// echo $ip;
+		// die();
 		$station = $this->guest_station_model->get_station_information_byip($ip);
-		if($station->num_rows() > 0)
+		if($station->num_rows() > 0 || $ip == "127.0.0.1" || $ip == "::1")
 		{
 			$station_row = $station->row();
 			$this->uid = $station_row->stationid;
@@ -41,7 +44,7 @@ class guest_station extends CI_Controller {
 	{
 		// $data['message'] = "";
 		// if(isset($this->input->get('message')))
-			$data['message'] = $this->input->get("message");
+		$data['message'] = $this->input->get("message");
 		
 		$data['station_info'] = $this->guest_station_model->get_station_information($this->uid);
 		
@@ -100,6 +103,10 @@ class guest_station extends CI_Controller {
 		}
 		
         $userinfo = $this->guest_station_model->get_userinfo($this->uid);
+		
+		// echo $this->uid;
+		// print_r($userinfo);
+		// die();
         
 		$data['guests'] = $this->guest_station_model->get_guests($data['date'],$userinfo->location);
 		
@@ -122,9 +129,14 @@ class guest_station extends CI_Controller {
         
         $station_info = $this->guest_station_model->get_station_information($stationid);
 		
-		$this->print_label($station_info->printer, $station_info->site_name, $name, $reason);
+		$this->print_label_new($station_info->printer, $station_info->site_name . " VISITOR", $name, $reason);
+		// echo $station_info->printer;
+		// echo $station_info->site_name;
+		// echo $name;
+		// echo $reason;
+		// die();
 		
-		echo "Thank you " . $name . "<br />\n";
+		// echo "Thank you " . $name . "<br />\n";
 		echo $station_info->checked_message;
 		// echo $this->input->post('site');
 		// echo $img_base64;
@@ -133,6 +145,13 @@ class guest_station extends CI_Controller {
 	private function print_label($printer_ip, $school, $name, $message)
 	{
 		return system('python C:\scripts\label-print\print-to-labeler.py "' . $printer_ip . '" "' . $school . '" "' . $name . '" "' . $message . '"', $retval);
+	}
+	
+	private function print_label_new($printer_ip, $school, $name, $message)
+	{
+		exec('python ' . BROTHER_SCRIPT_PATH . 'generate_label.py "' . $printer_ip . '" "' . $school . '" "' . $name . '" "' . $message . '" 2&1', $output);
+		// print_r($output);
+		return $output;
 	}
 	
 }
