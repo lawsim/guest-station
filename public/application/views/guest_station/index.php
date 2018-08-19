@@ -22,12 +22,11 @@
 
 ?>
 
-<label for="text-basic">Full Name:</label>
+<h2 style="margin: 0px;">Full Name:</h2>
 <input type="text" name="name" id="name" />
-<br />
-<label for="text-basic">Reason for visit:<?php echo MAX_REASON_LEN ? "(Max " . MAX_REASON_LEN . " characters)" : false; ?></label>
+<h2 style="margin: 0px;">Reason for visit:<?php echo MAX_REASON_LEN ? "(Max " . MAX_REASON_LEN . " characters)" : false; ?></h2>
 <input type="text" name="reason" id="reason" <?php echo MAX_REASON_LEN ? 'maxlength="' . MAX_REASON_LEN . '"' : false; ?> />
-<input type="button" value="Click here to check-in" id="submit">
+<input style="background-color: #00e676; font-size: 20px; font-weight: bold;" type="button" value="Click here to check-in" id="submit">
 
 </form>
 
@@ -76,9 +75,16 @@
 			})
 			.done(function( data ) {
 				console.log(data);
-				document.getElementById('results').innerHTML = data;
+				// document.getElementById('results').innerHTML = data;
                 $('#name').val('');
                 $('#reason').val('');
+                // setTimeout(function() {
+                    // console.log('emptied');
+                    // $("#results").text('');
+                // }, 3000);
+                
+                $('<div>'+data+'</div>').insertBefore('#results').delay(3000).fadeOut();
+                
 				/*document.getElementById('results').innerHTML = 
 					'<h2>Here is your large image:</h2>' + 
 					'<img src="'+data_uri+'"/>';*/
@@ -111,14 +117,21 @@
 			imguri: ''
 		})
 		.done(function( data ) {
-			console.log(data);
-			document.getElementById('results').innerHTML = data;
-			$('#name').val('');
-			$('#reason').val('');
-			/*document.getElementById('results').innerHTML = 
-				'<h2>Here is your large image:</h2>' + 
-				'<img src="'+data_uri+'"/>';*/
-		});
+            console.log(data);
+            // document.getElementById('results').innerHTML = data;
+            $('#name').val('');
+            $('#reason').val('');
+            // setTimeout(function() {
+                // console.log('emptied');
+                // $("#results").text('');
+            // }, 3000);
+            
+            $('<h2>'+data+'</h2>').insertBefore('#results').delay(3000).fadeOut();
+            
+            /*document.getElementById('results').innerHTML = 
+                '<h2>Here is your large image:</h2>' + 
+                '<img src="'+data_uri+'"/>';*/
+        });
 	}
 </script>
 

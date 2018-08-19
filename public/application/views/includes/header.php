@@ -10,7 +10,6 @@
     <script src="<?php echo base_url();?>assets/jquery.ba-throttle-debounce.js"></script>
     <script src="<?php echo base_url();?>assets/jquery-ui-1.12.0.custom/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/jquery-ui-1.12.0.custom/jquery-ui.css" />
-
 	
 </head> 
 <body> 
