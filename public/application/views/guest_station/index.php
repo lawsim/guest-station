@@ -25,12 +25,11 @@
 <label for="text-basic">Full Name:</label>
 <input type="text" name="name" id="name" />
 <br />
-<label for="text-basic">Reason for visit:</label>
-<input type="text" name="reason" id="reason" />
+<label for="text-basic">Reason for visit:<?php echo MAX_REASON_LEN ? "(Max " . MAX_REASON_LEN . " characters)" : false; ?></label>
+<input type="text" name="reason" id="reason" <?php echo MAX_REASON_LEN ? 'maxlength="' . MAX_REASON_LEN . '"' : false; ?> />
 <input type="button" value="Click here to check-in" id="submit">
 
 </form>
-
 
 <?php if(CAPTURE_PHOTO): ?>
 <!-- First, include the Webcam.js JavaScript Library -->

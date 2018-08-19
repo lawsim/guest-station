@@ -19,9 +19,9 @@ script_dir = os.path.dirname(os.path.realpath(__file__)) + "\\"
 
 # img = Image.new('RGB', (696,250), color='red')
 max_w = 696
-max_h = 400
+max_h = 385
 spacer_gap = 5
-name_font_size = 55
+name_font_size = 85
 text_font_size = 45
 img = Image.new('RGB', (max_w,max_h), color='white')
 draw = ImageDraw.Draw(img)
@@ -31,7 +31,7 @@ top_h = 100
 draw.rectangle([(0,0),(max_w,top_h)], fill='red')
 
 # write visitor
-fnt = ImageFont.truetype(script_dir + 'fonts/Roboto-Bold.ttf', 80)
+fnt = ImageFont.truetype(script_dir + 'fonts/Roboto-Bold.ttf', 70)
 text = heading
 w, h = draw.textsize(text, font=fnt)
 draw.text(((max_w - w) / 2, (top_h/2 - h/2)), text, fill='white', font=fnt)
@@ -42,25 +42,28 @@ spacer_h = spacer_gap
 draw.rectangle([(0,spacer_start_h),(max_w,spacer_start_h+spacer_h)], fill='red')
 
 # text area
-text_h_start = spacer_start_h + spacer_h + spacer_gap*2
-text_w_start = 20
+text_h_start = spacer_start_h + spacer_h + spacer_gap*4
 
 # draw name
 fnt = ImageFont.truetype(script_dir + 'fonts/Roboto-Bold.ttf', name_font_size)
 text = visitorname
 w, h = draw.textsize(text, font=fnt)
 h_pos = text_h_start
-draw.text((text_w_start, h_pos), text, fill='black', font=fnt)
+draw.text(((max_w - w) / 2, h_pos), text, fill='black', font=fnt)
 
 #draw reason
 fnt = ImageFont.truetype(script_dir + 'fonts/Roboto-Regular.ttf', text_font_size)
-lines = textwrap.wrap(reason, width=40)
 h_pos = text_h_start+h+spacer_gap
 
-for text in lines:
-	w3, h3 = draw.textsize(text, font=fnt)
-	draw.text((text_w_start, h_pos), text, fill='black', font=fnt)
-	h_pos += h3 + 2
+text = (reason[:30] + '...') if len(reason) > 30 else reason
+w3, h3 = draw.textsize(text, font=fnt)
+draw.text(((max_w - w3) / 2, h_pos), text, fill='black', font=fnt)
+    
+# lines = textwrap.wrap(reason, width=30)
+# for text in lines:
+	# w3, h3 = draw.textsize(text, font=fnt)
+	# draw.text(((max_w - w3) / 2, h_pos), text, fill='black', font=fnt)
+	# h_pos += h3 + 2
 
 # draw bottom bar
 bottom_bar_h_start = max_h-70
@@ -69,7 +72,7 @@ draw.rectangle([(0,bottom_bar_h_start),(max_w,bottom_bar_h)], fill='red')
 
 # draw date/time
 fnt = ImageFont.truetype(script_dir + 'fonts/Roboto-Regular.ttf', text_font_size)
-text = strftime("%b %d, %Y %I:%M %p", localtime())
+text = strftime("%b %d, %Y %I:%M %p", localtime()).replace(" 0", " ")
 w, h = draw.textsize(text, font=fnt)
 draw.text(((max_w - w) / 2, (bottom_bar_h_start+(70/2) - h/2)), text, fill='white', font=fnt)
 
