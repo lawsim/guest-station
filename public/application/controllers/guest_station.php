@@ -119,7 +119,9 @@ class guest_station extends CI_Controller {
 	{
 		$img_base64 = $this->input->post('imguri');
 		$img = addslashes(base64_decode( $img_base64));
-		$name = $this->input->post('fullname');
+		$fname = $this->input->post('fullname');
+		$lname = $this->input->post('lastname');
+		$name = $fname . " " . $lname;
 		$stationid = $this->input->post('stationid');
 		$site = $this->input->post('site');
 		$location = $this->input->post('location');
@@ -129,10 +131,11 @@ class guest_station extends CI_Controller {
         
         $station_info = $this->guest_station_model->get_station_information($stationid);
 		
-		$this->print_label_new($station_info->printer, $station_info->site_name . " VISITOR", $name, $reason);
+		$this->print_label_new($station_info->printer, $station_info->site_name . " VISITOR", $fname, $lname, $reason);
 		// echo $station_info->printer;
 		// echo $station_info->site_name;
-		// echo $name;
+		// echo $fname;
+		// echo $lname;
 		// echo $reason;
 		// die();
 		
@@ -147,9 +150,9 @@ class guest_station extends CI_Controller {
 		return system('python C:\scripts\label-print\print-to-labeler.py "' . $printer_ip . '" "' . $school . '" "' . $name . '" "' . $message . '"', $retval);
 	}
 	
-	private function print_label_new($printer_ip, $school, $name, $message)
+	private function print_label_new($printer_ip, $school, $fname, $lname, $message)
 	{
-		exec('python ' . BROTHER_SCRIPT_PATH . 'generate_label.py "' . $printer_ip . '" "' . $school . '" "' . $name . '" "' . $message . '" 2&1', $output);
+		exec('python ' . BROTHER_SCRIPT_PATH . 'generate_label.py "' . $printer_ip . '" "' . $school . '" "' . $fname . '" "' . $lname . '" "' . $message . '" 2&1', $output);
 		// print_r($output);
 		return $output;
 	}

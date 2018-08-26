@@ -14,7 +14,7 @@
 		echo '<div><a href="' . site_url('guest_station/checkout') . '" class="ui-btn" data-ajax="false">Click here to check out</a></div>';
 	}
 
-	echo '<div id="results"><?php echo $message; ?></div>';
+	echo '<h1 id="results" style="color: red;"><?php echo $message; ?></h1>';
 	if(CAPTURE_PHOTO)
 	{
 		echo '<div id="my_camera"></div><br />';
@@ -22,8 +22,10 @@
 
 ?>
 
-<h2 style="margin: 0px;">Full Name:</h2>
-<input type="text" name="name" id="name" />
+<h2 style="margin: 0px;">First Name: (Max 10 characters)</h2>
+<input type="text" name="name" id="name" maxlength="10" />
+<h2 style="margin: 0px;">Last Name: (Max 10 characters)</h2>
+<input type="text" name="lname" id="lname" maxlength="10" />
 <h2 style="margin: 0px;">Reason for visit:<?php echo MAX_REASON_LEN ? "(Max " . MAX_REASON_LEN . " characters)" : false; ?></h2>
 <input type="text" name="reason" id="reason" <?php echo MAX_REASON_LEN ? 'maxlength="' . MAX_REASON_LEN . '"' : false; ?> />
 <input style="background-color: #00e676; font-size: 20px; font-weight: bold;" type="button" value="Click here to check-in" id="submit">
@@ -55,11 +57,13 @@
 
 	function take_snapshot() {
 		var fname = $("#name").val();
+		var lname = $("#lame").val();
         
-        if( !$("#name").val() || !$("#reason").val())
+        if( !$("#name").val() || !$("#lname").val() || !$("#reason").val())
         {
-            document.getElementById('results').innerHTML = "You cannot leave name or reason blank";
-            return;
+            // document.getElementById('results').innerHTML = "You cannot leave name or reason blank";
+            $('<div>You cannot leave name or reason blank</div>').insertBefore('#results').delay(3000).fadeOut();
+			return;
         }
 		// take snapshot and get image data
 		Webcam.snap( function(data_uri) {
@@ -67,6 +71,7 @@
 			
 			$.post( "<?php echo base_url(); ?>" + "index.php/guest_station/checkin_guest", { 
 				fullname: fname,
+				lastname: lname,
 				stationid: $("input[name=stationid]").val(),
 				site: $("input[name=site]").val(),
 				location: $("input[name=location]").val(),
@@ -77,6 +82,7 @@
 				console.log(data);
 				// document.getElementById('results').innerHTML = data;
                 $('#name').val('');
+                $('#lname').val('');
                 $('#reason').val('');
                 // setTimeout(function() {
                     // console.log('emptied');
@@ -101,15 +107,20 @@
 
 	function submit_checkin() {
 		var fname = $("#name").val();
+		var lname = $("#lname").val();
         
-        if( !$("#name").val() || !$("#reason").val())
+        if( !$("#name").val() || !$("#lname").val() || !$("#reason").val())
         {
-            document.getElementById('results').innerHTML = "You cannot leave name or reason blank";
-            return;
+            // document.getElementById('results').innerHTML = "You cannot leave name or reason blank";
+            $('<div>You cannot leave name or reason blank</div>').insertBefore('#results').delay(3000).fadeOut();
+			return;
         }
+		
+		$("#results").text('Processing, please wait');
 		
 		$.post( "<?php echo base_url(); ?>" + "index.php/guest_station/checkin_guest", { 
 			fullname: fname,
+			lastname: lname,
 			stationid: $("input[name=stationid]").val(),
 			site: $("input[name=site]").val(),
 			location: $("input[name=location]").val(),
@@ -120,12 +131,14 @@
             console.log(data);
             // document.getElementById('results').innerHTML = data;
             $('#name').val('');
+            $('#lname').val('');
             $('#reason').val('');
             // setTimeout(function() {
                 // console.log('emptied');
                 // $("#results").text('');
             // }, 3000);
             
+			$("#results").text('');
             $('<h2>'+data+'</h2>').insertBefore('#results').delay(3000).fadeOut();
             
             /*document.getElementById('results').innerHTML = 
